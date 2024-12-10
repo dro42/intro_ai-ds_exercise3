@@ -35,5 +35,5 @@
 3. Install the required packages:
 
     ```bash
-    pip install -r requirements.txt
+    pip install -r "requirements_[windows|macos].txt"
     ```
