@@ -60,6 +60,7 @@ coverage.xml
 
 # Logs
 *.log
+log/*
 
 # Temporary files
 *.temp
