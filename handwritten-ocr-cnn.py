@@ -269,7 +269,7 @@ layer_names = [layer.name for layer in model.layers[:8]]
 
 weights = [layer.get_weights() for layer in model.layers[:4]]
 figure_name = model_name + '_initial_weights'
-display_weights_column(weights, layer_names, './', figure_name, figure_format, False)
+display_weights_column(weights, layer_names, './results', figure_name, figure_format, False)
 
 log_dir = os.path.join(log_path, datetime.now().strftime("%Y%m%d-%H%M%S"))
 
