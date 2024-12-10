@@ -1,0 +1,10 @@
+tensorflow-macos # needed for MacOS (M1/M2)
+tensorflow-metal # Metal plugin for GPU acceleration on macOS
+keras
+matplotlib
+numpy
+pyqt5
+scikit-learn
+visualkeras
+tensorboard
+keras-visualizer
