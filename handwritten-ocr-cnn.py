@@ -1,10 +1,11 @@
 # keras imports for the dataset and building our neural network
-from keras.datasets import mnist
+from tensorflow.keras.datasets import mnist
 from keras.models import Model, Sequential
 from keras.layers import Dense, Dropout, Conv2D, MaxPool2D, Flatten, BatchNormalization
 from keras.optimizers.schedules import ExponentialDecay
 from keras import callbacks
-from tensorflow.keras.optimizers import SGD, Adam
+from tensorflow.keras.callbacks import TensorBoard
+from tensorflow.keras.optimizers.legacy import SGD, Adam
 # from keras.utils import np_utils
 from keras.utils import to_categorical
 from sklearn.metrics import ConfusionMatrixDisplay
@@ -28,8 +29,8 @@ def display_classification_report(classification_report, figure_path, figure_nam
 def display_confusion_matrix(confusion_matrix, labels, figure_path, figure_name, figure_format, onscreen=True):
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
 
-    disp.plot(cmap=plt.cm.Greys)
-    # fig=disp.figure()
+    disp.plot(cmap=plt.cm.gray)
+    fig=disp.figure_
 
     plt.savefig(os.path.join(figure_path, figure_name + '.' + figure_format), format=figure_format)
 
@@ -197,7 +198,7 @@ n_epochs = 100
 model_name = 'CNN_Handwritten_OCR_CNN' + str(n_cnn1planes) + '_KERNEL' + str(n_cnn1kernel) + '_Epochs' + str(n_epochs)
 # figure_format='svg'
 figure_format = 'png'
-figure_path = './'
+figure_path = './results'
 log_path = './log'
 
 # layer_outputs = [layer.output for layer in model.layers[1:7]]
@@ -268,18 +269,22 @@ layer_names = [layer.name for layer in model.layers[:8]]
 
 weights = [layer.get_weights() for layer in model.layers[:4]]
 figure_name = model_name + '_initial_weights'
-display_weights_column(weights, layer_names, './', figure_name, figure_format, False)
+display_weights_column(weights, layer_names, './results', figure_name, figure_format, False)
+
+log_dir = os.path.join(log_path, datetime.now().strftime("%Y%m%d-%H%M%S"))
+
+tensorboard_callback = TensorBoard(log_dir=log_dir, histogram_freq=1)
 
 # training the model for n_epochs, use 10% of the training data as validation data
 history = model.fit(X_train, Y_train, validation_split=0.1, batch_size=128, epochs=n_epochs,
                     callbacks=[tensorboard_callback])
 
 figure_name = model_name + '_loss'
-display_loss_function(history, './', figure_name, figure_format)
+display_loss_function(history, './results', figure_name, figure_format)
 
 weights = [layer.get_weights() for layer in model.layers[:4]]
 figure_name = model_name + '_weights'
-display_weights_column(weights, layer_names, './', figure_name, figure_format, False)
+display_weights_column(weights, layer_names, './results', figure_name, figure_format, False)
 
 X_test_images = X_test[:2]
 for i in range(X_test_images.shape[0]):
