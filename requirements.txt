@@ -1,0 +1,10 @@
+tensorflow
+# gpu plugin for windows?
+keras
+matplotlib
+numpy
+pyqt5
+scikit-learn
+visualkeras
+tensorboard
+keras-visualizer
