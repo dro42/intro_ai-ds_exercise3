@@ -181,7 +181,7 @@ print("Shape before one-hot encoding: ", y_train.shape)
 Y_train = to_categorical(y_train, n_classes)
 Y_test = to_categorical(y_test, n_classes)
 print("Shape after one-hot encoding: ", Y_train.shape)
-n_cnn1planes = 16  # task 1 - number of the feature maps for the first convolutional layer
+n_cnn1planes = 100  # task 1 - number of the feature maps for the first convolutional layer
 
 n_cnn1kernel = 3
 n_poolsize = 1
@@ -316,11 +316,11 @@ history = model.fit(
 )
 
 figure_name = model_name + '_loss'
-display_loss_function(history, './results', figure_name, figure_format)
+display_loss_function(history, figure_path, figure_name, figure_format)
 
 weights = [layer.get_weights() for layer in model.layers[:4]]
 figure_name = model_name + '_weights'
-display_weights_column(weights, layer_names, './results', figure_name, figure_format, False)
+display_weights_column(weights, layer_names, figure_path, figure_name, figure_format, False)
 
 X_test_images = X_test[:2]
 for i in range(X_test_images.shape[0]):
