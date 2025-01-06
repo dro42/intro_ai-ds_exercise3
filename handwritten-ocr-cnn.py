@@ -201,13 +201,14 @@ momentum = 0.9
 n_epochs = 100
 # selected 0.001, 0.003, 0.005, 0.01
 n_learning_rate = 0.001 # 0.01 - 0.0001
-task = '_dropout_task5'
+task = 'task_5'
+task_name = 'dropout'
 rate = dropout
 
-model_name = 'CNN_Handwritten_OCR_CNN' + str(n_cnn1planes) + '_KERNEL' + str(n_cnn1kernel) + '_Epochs' + str(n_epochs) + f'{task}' + f'rate{rate}'
+model_name = 'CNN_Handwritten_OCR_CNN' + str(n_cnn1planes) + '_KERNEL' + str(n_cnn1kernel) + '_Epochs' + str(n_epochs) + f'{task_name}' + f'rate{rate}'
 # figure_format='svg'
 figure_format = 'png'
-figure_path = './results/task_5/dropout_0.4'
+figure_path = f'./results/{task}/{task_name}_{rate}'
 log_path = './log'
 
 os.makedirs(figure_path, exist_ok=True)
