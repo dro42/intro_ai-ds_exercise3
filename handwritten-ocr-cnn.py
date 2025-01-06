@@ -186,7 +186,8 @@ print("Shape before one-hot encoding: ", y_train.shape)
 Y_train = to_categorical(y_train, n_classes)
 Y_test = to_categorical(y_test, n_classes)
 print("Shape after one-hot encoding: ", Y_train.shape)
-n_cnn1planes = 8
+n_cnn1planes = 8 # task 1 - number of the feature maps for the first convolutional layer
+
 n_cnn1kernel = 3
 n_poolsize = 1
 
@@ -196,8 +197,8 @@ n_poolsize = 1
 # Stride is a critical parameter for controlling the spatial resolution of the feature maps and influencing the receptive field of the network.
 n_strides = 1
 n_dense = 64
-dropout = 0.3 # 0.2 - 0.5
-momentum = 0.9
+dropout = 0.5 # 0.2 - 0.5
+momentum = 0.9 # task 4 - optimizers
 n_epochs = 100
 # selected 0.001, 0.003, 0.005, 0.01
 n_learning_rate = 0.001 # 0.01 - 0.0001
@@ -230,7 +231,7 @@ model.add(cnn1)
 model.add(BatchNormalization())
 model.add(MaxPool2D(pool_size=(n_poolsize, n_poolsize)))
 
-model.add(Dropout(dropout))
+# model.add(Dropout(dropout))
 
 cnn2 = Conv2D(n_cnn1planes * 2, kernel_size=(n_cnn1kernel, n_cnn1kernel), strides=(n_strides, n_strides),
               padding='valid', activation='relu', kernel_regularizer=l2(0.001))  # Add L2 regularization
@@ -238,7 +239,7 @@ model.add(cnn2)
 model.add(BatchNormalization())
 model.add(MaxPool2D(pool_size=(n_poolsize, n_poolsize)))
 
-model.add(Dropout(dropout))
+# model.add(Dropout(dropout))
 
 cnn3 = Conv2D(n_cnn1planes * 4, kernel_size=(n_cnn1kernel, n_cnn1kernel), strides=(n_strides, n_strides),
               padding='valid', activation='relu', kernel_regularizer=l2(0.001))  # Add L2 regularization
@@ -250,7 +251,7 @@ model.add(MaxPool2D(pool_size=(n_poolsize, n_poolsize)))
 # flatten output of conv
 model.add(Flatten())
 
-model.add(Dropout(dropout))
+# model.add(Dropout(dropout)) # task 5
 
 # hidden layer
 model.add(Dense(n_dense, activation='relu', kernel_regularizer=l2(0.001)))  # Add L2 regularization
@@ -264,8 +265,11 @@ model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer=o
 
 # compiling the sequential model
 
-
-
+'''
+task 2 - learning rate
+learning_rate = [0.01, 0.005, 0.003, 0.001]:
+task 3 - learning rate scheduler
+'''
 learning_rate = ExponentialDecay(
     initial_learning_rate=n_learning_rate,  # Smaller initial value
     decay_steps=1000,
@@ -278,6 +282,7 @@ learning_rate = ExponentialDecay(
 # learning_rate = ExponentialDecay(initial_learning_rate=1e-2, decay_steps=n_epochs, decay_rate=0.9)
 
 
+# task 4 - optimizer
 optimizer = SGD(learning_rate=n_learning_rate,
                 momentum=momentum,
                 clipnorm=1.0)
