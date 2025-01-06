@@ -187,14 +187,14 @@ print("Shape after one-hot encoding: ", Y_train.shape)
 n_cnn1planes = 20  # task 1 - number of the feature maps for the first convolutional layer
 
 n_cnn1kernel = 3
-n_poolsize = 1
+n_poolsize = 2
 
 # Stride defines the step size at which the filter moves across the input during convolution.
 # A larger stride results in a reduction of the spatial dimensions of the output feature map. 
 # Stride can be adjusted to control the level of downsampling in the network.
 # Stride is a critical parameter for controlling the spatial resolution of the feature maps and influencing the receptive field of the network.
 n_strides = 1
-n_dense = 64
+n_dense = 128
 dropout = 0.5  # 0.2 - 0.5
 momentum = 0.9  # task 4 - optimizers
 n_epochs = 100
