@@ -201,7 +201,7 @@ dropout = 0.5 # 0.2 - 0.5
 momentum = 0.9 # task 4 - optimizers
 n_epochs = 100
 # selected 0.001, 0.003, 0.005, 0.01
-initial_learning_rate = 0.01 # 0.01 - 0.0001
+initial_learning_rate = 0.001 # 0.01 - 0.0001
 task = 'task_2'
 task_name = 'learning_rate'
 rate = initial_learning_rate
