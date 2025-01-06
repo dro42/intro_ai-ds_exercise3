@@ -201,10 +201,10 @@ dropout = 0.5 # 0.2 - 0.5
 momentum = 0.9 # task 4 - optimizers
 n_epochs = 100
 # selected 0.001, 0.003, 0.005, 0.01
-n_learning_rate = 0.003 # 0.01 - 0.0001
-task = 'task_4'
-task_name = 'optimizer'
-rate = n_learning_rate
+initial_learning_rate = 0.001 # 0.01 - 0.0001
+task = 'task_3'
+task_name = 'learning_rate_scheduler'
+rate = initial_learning_rate
 
 model_name = 'CNN_Handwritten_OCR_CNN' + str(n_cnn1planes) + '_KERNEL' + str(n_cnn1kernel) + '_Epochs' + str(n_epochs) + f'{task_name}' + f'rate{rate}'
 # figure_format='svg'
@@ -259,10 +259,8 @@ model.add(Dense(n_dense, activation='relu', kernel_regularizer=l2(0.001)))  # Ad
 # output layer
 model.add(Dense(n_classes, activation='softmax'))
 
-# Reduce the learning rate
-optimizer = SGD(learning_rate=n_learning_rate, momentum=0.9, clipnorm=1.0)
 
-model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer=optimizer)
+
 
 # compiling the sequential model
 
@@ -272,10 +270,18 @@ learning_rate = [0.01, 0.005, 0.003, 0.001]:
 task 3 - learning rate scheduler
 '''
 learning_rate = ExponentialDecay(
-    initial_learning_rate=n_learning_rate,  # Smaller initial value
+    initial_learning_rate=initial_learning_rate,  # Smaller initial value
     decay_steps=1000,
     decay_rate=0.9
 )
+
+# Task 4 - Optimizer
+
+optimizer=SGD(learning_rate = learning_rate) # momentum task 4
+
+model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer=optimizer)
+
+
 # OR use a learning rate scheduler that adapts the learning rate over the epochs of the training process
 # https://keras.io/2.15/api/optimizers/learning_rate_schedules/
 
@@ -284,16 +290,14 @@ learning_rate = ExponentialDecay(
 
 
 # task 4 - optimizer
-optimizer = SGD(learning_rate=n_learning_rate,
-                momentum=momentum,
-                clipnorm=1.0)
+#optimizer = SGD(learning_rate=n_learning_rate,
+ #               momentum=momentum,
+  #              clipnorm=1.0)
 
 
 # vary the constant learning rate
 # learning_rate = 0.01
 # optimizer=SGD(learning_rate=learning_rate)
-
-model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer=optimizer)
 
 layer_names = [layer.name for layer in model.layers[:8]]
 
