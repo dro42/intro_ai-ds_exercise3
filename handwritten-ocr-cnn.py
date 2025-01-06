@@ -196,8 +196,7 @@ n_poolsize = 1
 # Stride is a critical parameter for controlling the spatial resolution of the feature maps and influencing the receptive field of the network.
 n_strides = 1
 n_dense = 64
-dropout = 0.75
-learning_rate=0.01
+dropout = 0.3
 n_epochs = 100
 
 model_name = 'CNN_Handwritten_OCR_CNN' + str(n_cnn1planes) + '_KERNEL' + str(n_cnn1kernel) + '_Epochs' + str(n_epochs)
@@ -216,7 +215,7 @@ cnn1 = Conv2D(n_cnn1planes,
               kernel_size=(n_cnn1kernel, n_cnn1kernel),
               activation='relu',
               kernel_initializer='he_normal',
-              kernel_regularizer=l2(0.01),  # Add L2 regularization
+              kernel_regularizer=l2(0.001),  # Add L2 regularization
               input_shape=(28, 28, 1))
 
 model.add(cnn1)
@@ -246,7 +245,7 @@ model.add(Flatten())
 model.add(Dropout(dropout))
 
 # hidden layer
-model.add(Dense(n_dense, activation='relu', kernel_regularizer=l2(0.01)))  # Add L2 regularization
+model.add(Dense(n_dense, activation='relu', kernel_regularizer=l2(0.001)))  # Add L2 regularization
 # output layer
 model.add(Dense(n_classes, activation='softmax'))
 
@@ -302,7 +301,7 @@ early_stopping = EarlyStopping(monitor='val_loss', patience=3, restore_best_weig
 history = model.fit(
     X_train, Y_train,
     validation_split=0.1,
-    batch_size=8,  # Reduce batch size
+    batch_size=128,
     epochs=n_epochs,
     callbacks=[tensorboard_callback, early_stopping]
 )
