@@ -2,8 +2,6 @@
 
 ## Task 1
 
-At 10 feature maps, the model underfit with high validation loss. Increasing to 25 and 50 feature maps improved performance, achieving a balance between training and validation loss. However, at 100 feature maps, the model began to overfit, as indicated by a rising validation loss after several epochs.
-
 ### Role of Convolution and Pooling Layers
 - **Convolution Layers**: Extract local patterns from the input images by applying filters, enabling the network to learn spatial hierarchies of features.
 - **Pooling Layers**: Reduce the spatial dimensions of feature maps, improving computational efficiency and reducing overfitting while retaining essential information.
