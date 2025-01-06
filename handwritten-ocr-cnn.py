@@ -8,12 +8,15 @@ from keras.callbacks import TensorBoard
 from keras.datasets import mnist
 from keras.layers import Dense, Conv2D, MaxPool2D, Flatten, BatchNormalization
 from keras.models import Model, Sequential
+from keras.src.layers import Dropout
+from keras.src.optimizers import SGD
 # from keras.utils import np_utils
 from keras.utils import to_categorical
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import classification_report, confusion_matrix
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.regularizers import l2
+from tensorflow.keras.optimizers.schedules import ExponentialDecay
 
 
 def display_classification_report(classification_report, figure_path, figure_name, onscreen=True):
@@ -181,7 +184,7 @@ print("Shape before one-hot encoding: ", y_train.shape)
 Y_train = to_categorical(y_train, n_classes)
 Y_test = to_categorical(y_test, n_classes)
 print("Shape after one-hot encoding: ", Y_train.shape)
-n_cnn1planes = 100  # task 1 - number of the feature maps for the first convolutional layer
+n_cnn1planes = 16  # task 1 - number of the feature maps for the first convolutional layer
 
 n_cnn1kernel = 3
 n_poolsize = 1
@@ -192,20 +195,20 @@ n_poolsize = 1
 # Stride is a critical parameter for controlling the spatial resolution of the feature maps and influencing the receptive field of the network.
 n_strides = 1
 n_dense = 64
-dropout = 0.5  # 0.2 - 0.5
+dropout = 0.2  # 0.2 - 0.5
 momentum = 0.9  # task 4 - optimizers
 n_epochs = 100
 # selected 0.001, 0.003, 0.005, 0.01
-initial_learning_rate = 0.001  # 0.01 - 0.0001
-task = 'task_1'
-task_name = 'topology'
+initial_learning_rate = 0.003  # 0.01 - 0.0001
+task = 'task_6'
+task_name = 'final_accuracy_evaluation'
 rate = n_cnn1planes
 
 model_name = 'CNN_Handwritten_OCR_CNN' + str(n_cnn1planes) + '_KERNEL' + str(n_cnn1kernel) + '_Epochs' + str(
     n_epochs) + f'{task_name}' + f'rate{rate}'
 # figure_format='svg'
 figure_format = 'png'
-figure_path = f'./results/{task}/{task_name}_{rate}'
+figure_path = f'./results/{task}/{task_name}'
 log_path = './log'
 
 # Create the results directory if it doesn't exist
@@ -228,7 +231,7 @@ model.add(cnn1)
 model.add(BatchNormalization())
 model.add(MaxPool2D(pool_size=(n_poolsize, n_poolsize)))
 
-# model.add(Dropout(dropout))
+model.add(Dropout(dropout))
 
 cnn2 = Conv2D(n_cnn1planes * 2, kernel_size=(n_cnn1kernel, n_cnn1kernel), strides=(n_strides, n_strides),
               padding='valid', activation='relu', kernel_regularizer=l2(0.001))  # Add L2 regularization
@@ -236,19 +239,19 @@ model.add(cnn2)
 model.add(BatchNormalization())
 model.add(MaxPool2D(pool_size=(n_poolsize, n_poolsize)))
 
-# model.add(Dropout(dropout))
+model.add(Dropout(dropout))
 
 cnn3 = Conv2D(n_cnn1planes * 4, kernel_size=(n_cnn1kernel, n_cnn1kernel), strides=(n_strides, n_strides),
               padding='valid', activation='relu', kernel_regularizer=l2(0.001))  # Add L2 regularization
 model.add(cnn3)
 model.add(MaxPool2D(pool_size=(n_poolsize, n_poolsize)))
 
-# model.add(Dropout(dropout))
+model.add(Dropout(dropout))
 
 # flatten output of conv
 model.add(Flatten())
 
-# model.add(Dropout(dropout)) # task 5
+model.add(Dropout(dropout)) # task 5
 
 # hidden layer
 model.add(Dense(n_dense, activation='relu', kernel_regularizer=l2(0.001)))  # Add L2 regularization
@@ -262,19 +265,19 @@ task 2 - learning rate
 learning_rate = [0.01, 0.005, 0.003, 0.001]:
 task 3 - learning rate scheduler
 
+learning_rate = initial_learning_rate
+'''
 learning_rate = ExponentialDecay(
     initial_learning_rate=initial_learning_rate,  # Smaller initial value
     decay_steps=1000,
     decay_rate=0.9
 )
-'''
-learning_rate = initial_learning_rate
 
 # Task 4 - Optimizer
 
-# optimizer=SGD(learning_rate = learning_rate) # momentum task 4
+optimizer=SGD(learning_rate = learning_rate, momentum=momentum) # momentum task 4
 
-model.compile(loss='categorical_crossentropy', metrics=['accuracy'])  # optimizer=optimizer)
+model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer=optimizer)
 
 # OR use a learning rate scheduler that adapts the learning rate over the epochs of the training process
 # https://keras.io/2.15/api/optimizers/learning_rate_schedules/
