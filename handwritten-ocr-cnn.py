@@ -1,25 +1,20 @@
 # keras imports for the dataset and building our neural network
-from keras.datasets import mnist
-from keras.models import Model, Sequential
-from keras.layers import Dense, Dropout, Conv2D, MaxPool2D, Flatten, BatchNormalization
-from keras.optimizers.schedules import ExponentialDecay
-from keras import callbacks
+import os
+from datetime import datetime
+
+import matplotlib.pyplot as plt
+import numpy as np
 from keras.callbacks import TensorBoard
-from tensorflow.keras.optimizers.legacy import SGD, Adam
+from keras.datasets import mnist
+from keras.layers import Dense, Conv2D, MaxPool2D, Flatten, BatchNormalization
+from keras.models import Model, Sequential
 # from keras.utils import np_utils
 from keras.utils import to_categorical
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import classification_report, confusion_matrix
-import matplotlib.pyplot as plt
-from matplotlib.gridspec import GridSpec
-from datetime import datetime
-import numpy as np
-import os
-import tensorflow as tf
-from tensorflow.keras.optimizers.schedules import ExponentialDecay
-from tensorflow.keras.initializers import HeNormal
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.regularizers import l2
+
 
 def display_classification_report(classification_report, figure_path, figure_name, onscreen=True):
     f = open(os.path.join(figure_path, figure_name + '.txt'), 'w')
@@ -186,7 +181,7 @@ print("Shape before one-hot encoding: ", y_train.shape)
 Y_train = to_categorical(y_train, n_classes)
 Y_test = to_categorical(y_test, n_classes)
 print("Shape after one-hot encoding: ", Y_train.shape)
-n_cnn1planes = 8 # task 1 - number of the feature maps for the first convolutional layer
+n_cnn1planes = 25  # task 1 - number of the feature maps for the first convolutional layer
 
 n_cnn1kernel = 3
 n_poolsize = 1
@@ -197,16 +192,17 @@ n_poolsize = 1
 # Stride is a critical parameter for controlling the spatial resolution of the feature maps and influencing the receptive field of the network.
 n_strides = 1
 n_dense = 64
-dropout = 0.5 # 0.2 - 0.5
-momentum = 0.9 # task 4 - optimizers
+dropout = 0.5  # 0.2 - 0.5
+momentum = 0.9  # task 4 - optimizers
 n_epochs = 100
 # selected 0.001, 0.003, 0.005, 0.01
-initial_learning_rate = 0.001 # 0.01 - 0.0001
-task = 'task_2'
-task_name = 'learning_rate'
-rate = initial_learning_rate
+initial_learning_rate = 0.001  # 0.01 - 0.0001
+task = 'task_1'
+task_name = 'topology'
+rate = n_cnn1planes
 
-model_name = 'CNN_Handwritten_OCR_CNN' + str(n_cnn1planes) + '_KERNEL' + str(n_cnn1kernel) + '_Epochs' + str(n_epochs) + f'{task_name}' + f'rate{rate}'
+model_name = 'CNN_Handwritten_OCR_CNN' + str(n_cnn1planes) + '_KERNEL' + str(n_cnn1kernel) + '_Epochs' + str(
+    n_epochs) + f'{task_name}' + f'rate{rate}'
 # figure_format='svg'
 figure_format = 'png'
 figure_path = f'./results/{task}/{task_name}_{rate}'
@@ -259,9 +255,6 @@ model.add(Dense(n_dense, activation='relu', kernel_regularizer=l2(0.001)))  # Ad
 # output layer
 model.add(Dense(n_classes, activation='softmax'))
 
-
-
-
 # compiling the sequential model
 
 '''
@@ -279,10 +272,9 @@ learning_rate = initial_learning_rate
 
 # Task 4 - Optimizer
 
-optimizer=SGD(learning_rate = learning_rate) # momentum task 4
+# optimizer=SGD(learning_rate = learning_rate) # momentum task 4
 
-model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer=optimizer)
-
+model.compile(loss='categorical_crossentropy', metrics=['accuracy'])  # optimizer=optimizer)
 
 # OR use a learning rate scheduler that adapts the learning rate over the epochs of the training process
 # https://keras.io/2.15/api/optimizers/learning_rate_schedules/
@@ -292,9 +284,9 @@ model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer=o
 
 
 # task 4 - optimizer
-#optimizer = SGD(learning_rate=n_learning_rate,
- #               momentum=momentum,
-  #              clipnorm=1.0)
+# optimizer = SGD(learning_rate=n_learning_rate,
+#               momentum=momentum,
+#              clipnorm=1.0)
 
 
 # vary the constant learning rate

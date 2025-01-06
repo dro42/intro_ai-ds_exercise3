@@ -1,0 +1,36 @@
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ conv2d (Conv2D)             (None, 26, 26, 10)        100       
+                                                                 
+ batch_normalization (Batch  (None, 26, 26, 10)        40        
+ Normalization)                                                  
+                                                                 
+ max_pooling2d (MaxPooling2  (None, 26, 26, 10)        0         
+ D)                                                              
+                                                                 
+ conv2d_1 (Conv2D)           (None, 24, 24, 20)        1820      
+                                                                 
+ batch_normalization_1 (Bat  (None, 24, 24, 20)        80        
+ chNormalization)                                                
+                                                                 
+ max_pooling2d_1 (MaxPoolin  (None, 24, 24, 20)        0         
+ g2D)                                                            
+                                                                 
+ conv2d_2 (Conv2D)           (None, 22, 22, 40)        7240      
+                                                                 
+ max_pooling2d_2 (MaxPoolin  (None, 22, 22, 40)        0         
+ g2D)                                                            
+                                                                 
+ flatten (Flatten)           (None, 19360)             0         
+                                                                 
+ dense (Dense)               (None, 64)                1239104   
+                                                                 
+ dense_1 (Dense)             (None, 10)                650       
+                                                                 
+=================================================================
+Total params: 1249034 (4.76 MB)
+Trainable params: 1248974 (4.76 MB)
+Non-trainable params: 60 (240.00 Byte)
+_________________________________________________________________
