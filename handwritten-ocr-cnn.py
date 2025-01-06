@@ -196,14 +196,21 @@ n_poolsize = 1
 # Stride is a critical parameter for controlling the spatial resolution of the feature maps and influencing the receptive field of the network.
 n_strides = 1
 n_dense = 64
-dropout = 0.3
+dropout = 0.3 # 0.2 - 0.5
+momentum = 0.9
 n_epochs = 100
+# selected 0.001, 0.003, 0.005, 0.01
+n_learning_rate = 0.001 # 0.01 - 0.0001
+task = '_dropout_task5'
+rate = dropout
 
-model_name = 'CNN_Handwritten_OCR_CNN' + str(n_cnn1planes) + '_KERNEL' + str(n_cnn1kernel) + '_Epochs' + str(n_epochs)
+model_name = 'CNN_Handwritten_OCR_CNN' + str(n_cnn1planes) + '_KERNEL' + str(n_cnn1kernel) + '_Epochs' + str(n_epochs) + f'{task}' + f'rate{rate}'
 # figure_format='svg'
 figure_format = 'png'
-figure_path = './results'
+figure_path = './results/task_5/dropout_0.4'
 log_path = './log'
+
+os.makedirs(figure_path, exist_ok=True)
 
 # layer_outputs = [layer.output for layer in model.layers[1:7]]
 # activation_model = Model(inputs=model.input,outputs=layer_outputs)
@@ -250,18 +257,16 @@ model.add(Dense(n_dense, activation='relu', kernel_regularizer=l2(0.001)))  # Ad
 model.add(Dense(n_classes, activation='softmax'))
 
 # Reduce the learning rate
-optimizer = SGD(learning_rate=0.001, momentum=0.9, clipnorm=1.0)
+optimizer = SGD(learning_rate=n_learning_rate, momentum=0.9, clipnorm=1.0)
 
 model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer=optimizer)
 
 # compiling the sequential model
 
-model_name += '_Optimzer_' + 'SGD'
 
-# vary the constant learning rate
-model_name += '_LearningRate_' + 'Constant'
+
 learning_rate = ExponentialDecay(
-    initial_learning_rate=0.001,  # Smaller initial value
+    initial_learning_rate=n_learning_rate,  # Smaller initial value
     decay_steps=1000,
     decay_rate=0.9
 )
@@ -272,10 +277,9 @@ learning_rate = ExponentialDecay(
 # learning_rate = ExponentialDecay(initial_learning_rate=1e-2, decay_steps=n_epochs, decay_rate=0.9)
 
 
-momentum = 0.9
-optimizer = SGD(learning_rate=0.001,
-                momentum=0.9,
-                clipnorm=1.0)# optimizer=Adam(learning_rate = learning_rate)
+optimizer = SGD(learning_rate=n_learning_rate,
+                momentum=momentum,
+                clipnorm=1.0)
 
 
 # vary the constant learning rate
@@ -295,7 +299,7 @@ log_dir = os.path.join(log_path, datetime.now().strftime("%Y%m%d-%H%M%S"))
 tensorboard_callback = TensorBoard(log_dir=log_dir, histogram_freq=1)
 
 # Define the EarlyStopping callback
-early_stopping = EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)
+early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
 
 # training the model for n_epochs, use 10% of the training data as validation data
 history = model.fit(
