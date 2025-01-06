@@ -201,10 +201,10 @@ dropout = 0.5 # 0.2 - 0.5
 momentum = 0.9 # task 4 - optimizers
 n_epochs = 100
 # selected 0.001, 0.003, 0.005, 0.01
-n_learning_rate = 0.001 # 0.01 - 0.0001
-task = 'task_5'
-task_name = 'dropout'
-rate = dropout
+n_learning_rate = 0.003 # 0.01 - 0.0001
+task = 'task_4'
+task_name = 'optimizer'
+rate = n_learning_rate
 
 model_name = 'CNN_Handwritten_OCR_CNN' + str(n_cnn1planes) + '_KERNEL' + str(n_cnn1kernel) + '_Epochs' + str(n_epochs) + f'{task_name}' + f'rate{rate}'
 # figure_format='svg'
@@ -212,6 +212,7 @@ figure_format = 'png'
 figure_path = f'./results/{task}/{task_name}_{rate}'
 log_path = './log'
 
+# Create the results directory if it doesn't exist
 os.makedirs(figure_path, exist_ok=True)
 
 # layer_outputs = [layer.output for layer in model.layers[1:7]]
