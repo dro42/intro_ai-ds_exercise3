@@ -15,8 +15,8 @@ from keras.utils import to_categorical
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import classification_report, confusion_matrix
 from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.regularizers import l2
 from tensorflow.keras.optimizers.schedules import ExponentialDecay
+from tensorflow.keras.regularizers import l2
 
 
 def display_classification_report(classification_report, figure_path, figure_name, onscreen=True):
@@ -184,7 +184,7 @@ print("Shape before one-hot encoding: ", y_train.shape)
 Y_train = to_categorical(y_train, n_classes)
 Y_test = to_categorical(y_test, n_classes)
 print("Shape after one-hot encoding: ", Y_train.shape)
-n_cnn1planes = 16  # task 1 - number of the feature maps for the first convolutional layer
+n_cnn1planes = 20  # task 1 - number of the feature maps for the first convolutional layer
 
 n_cnn1kernel = 3
 n_poolsize = 1
@@ -195,11 +195,11 @@ n_poolsize = 1
 # Stride is a critical parameter for controlling the spatial resolution of the feature maps and influencing the receptive field of the network.
 n_strides = 1
 n_dense = 64
-dropout = 0.2  # 0.2 - 0.5
+dropout = 0.5  # 0.2 - 0.5
 momentum = 0.9  # task 4 - optimizers
 n_epochs = 100
 # selected 0.001, 0.003, 0.005, 0.01
-initial_learning_rate = 0.003  # 0.01 - 0.0001
+initial_learning_rate = 0.001  # 0.01 - 0.0001
 task = 'task_6'
 task_name = 'final_accuracy_evaluation'
 rate = n_cnn1planes
@@ -251,7 +251,7 @@ model.add(Dropout(dropout))
 # flatten output of conv
 model.add(Flatten())
 
-model.add(Dropout(dropout)) # task 5
+model.add(Dropout(dropout))  # task 5
 
 # hidden layer
 model.add(Dense(n_dense, activation='relu', kernel_regularizer=l2(0.001)))  # Add L2 regularization
@@ -275,7 +275,7 @@ learning_rate = ExponentialDecay(
 
 # Task 4 - Optimizer
 
-optimizer=SGD(learning_rate = learning_rate, momentum=momentum) # momentum task 4
+optimizer = SGD(learning_rate=learning_rate, momentum=momentum)  # momentum task 4
 
 model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer=optimizer)
 
@@ -300,7 +300,7 @@ layer_names = [layer.name for layer in model.layers[:8]]
 
 weights = [layer.get_weights() for layer in model.layers[:4]]
 figure_name = model_name + '_initial_weights'
-display_weights_column(weights, layer_names, './results', figure_name, figure_format, False)
+display_weights_column(weights, layer_names, figure_path, figure_name, figure_format, False)
 
 log_dir = os.path.join(log_path, datetime.now().strftime("%Y%m%d-%H%M%S"))
 
