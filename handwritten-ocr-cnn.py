@@ -186,7 +186,7 @@ print("Shape before one-hot encoding: ", y_train.shape)
 Y_train = to_categorical(y_train, n_classes)
 Y_test = to_categorical(y_test, n_classes)
 print("Shape after one-hot encoding: ", Y_train.shape)
-n_cnn1planes = 15
+n_cnn1planes = 8
 n_cnn1kernel = 3
 n_poolsize = 1
 
@@ -195,9 +195,9 @@ n_poolsize = 1
 # Stride can be adjusted to control the level of downsampling in the network.
 # Stride is a critical parameter for controlling the spatial resolution of the feature maps and influencing the receptive field of the network.
 n_strides = 1
-n_dense = 100
-dropout = 0.5
-
+n_dense = 64
+dropout = 0.75
+learning_rate=0.01
 n_epochs = 100
 
 model_name = 'CNN_Handwritten_OCR_CNN' + str(n_cnn1planes) + '_KERNEL' + str(n_cnn1kernel) + '_Epochs' + str(n_epochs)
@@ -216,10 +216,11 @@ cnn1 = Conv2D(n_cnn1planes,
               kernel_size=(n_cnn1kernel, n_cnn1kernel),
               activation='relu',
               kernel_initializer='he_normal',
-              kernel_regularizer=l2(0.001),  # Add L2 regularization
+              kernel_regularizer=l2(0.01),  # Add L2 regularization
               input_shape=(28, 28, 1))
 
 model.add(cnn1)
+model.add(BatchNormalization())
 model.add(MaxPool2D(pool_size=(n_poolsize, n_poolsize)))
 
 model.add(Dropout(dropout))
@@ -227,6 +228,7 @@ model.add(Dropout(dropout))
 cnn2 = Conv2D(n_cnn1planes * 2, kernel_size=(n_cnn1kernel, n_cnn1kernel), strides=(n_strides, n_strides),
               padding='valid', activation='relu', kernel_regularizer=l2(0.001))  # Add L2 regularization
 model.add(cnn2)
+model.add(BatchNormalization())
 model.add(MaxPool2D(pool_size=(n_poolsize, n_poolsize)))
 
 model.add(Dropout(dropout))
@@ -244,7 +246,7 @@ model.add(Flatten())
 model.add(Dropout(dropout))
 
 # hidden layer
-model.add(Dense(n_dense, activation='relu', kernel_regularizer=l2(0.001)))  # Add L2 regularization
+model.add(Dense(n_dense, activation='relu', kernel_regularizer=l2(0.01)))  # Add L2 regularization
 # output layer
 model.add(Dense(n_classes, activation='softmax'))
 
@@ -270,7 +272,7 @@ learning_rate = ExponentialDecay(
 # model_name += '_LearningRate_' + 'ExponentialDecay'
 # learning_rate = ExponentialDecay(initial_learning_rate=1e-2, decay_steps=n_epochs, decay_rate=0.9)
 
-# learning_rate=0.01
+
 momentum = 0.9
 optimizer = SGD(learning_rate=0.001,
                 momentum=0.9,
@@ -294,13 +296,13 @@ log_dir = os.path.join(log_path, datetime.now().strftime("%Y%m%d-%H%M%S"))
 tensorboard_callback = TensorBoard(log_dir=log_dir, histogram_freq=1)
 
 # Define the EarlyStopping callback
-early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+early_stopping = EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)
 
 # training the model for n_epochs, use 10% of the training data as validation data
 history = model.fit(
     X_train, Y_train,
     validation_split=0.1,
-    batch_size=32,  # Reduce batch size
+    batch_size=8,  # Reduce batch size
     epochs=n_epochs,
     callbacks=[tensorboard_callback, early_stopping]
 )
