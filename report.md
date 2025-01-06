@@ -4,6 +4,60 @@
 
 At 10 feature maps, the model underfit with high validation loss. Increasing to 25 and 50 feature maps improved performance, achieving a balance between training and validation loss. However, at 100 feature maps, the model began to overfit, as indicated by a rising validation loss after several epochs.
 
+### Role of Convolution and Pooling Layers
+- **Convolution Layers**: Extract local patterns from the input images by applying filters, enabling the network to learn spatial hierarchies of features.
+- **Pooling Layers**: Reduce the spatial dimensions of feature maps, improving computational efficiency and reducing overfitting while retaining essential information.
+
+### Experimental Setup
+- **Enhancements**: A third pair of convolution and pooling layers was added to enhance feature extraction.
+- **Feature Maps**: The number of planes/feature maps was varied across four configurations: **10**, **16**, **25**, and **50**.
+- **Evaluation Metrics**: Accuracy, Precision, Recall, F1-Score
+
+---
+
+### Results Summary
+
+#### Feature Maps: 10
+- **Accuracy**: 96.09%
+- **Macro Precision/Recall/F1-Score**: 96.10%
+- **Observations**:
+  - Achieved reasonable accuracy but showed underfitting on some classes (e.g., `8` and `7`).
+  - Limited feature maps constrained the model's ability to capture complex patterns.
+
+---
+
+#### Feature Maps: 16
+- **Accuracy**: 96.44%
+- **Macro Precision/Recall/F1-Score**: 96.45%
+- **Observations**:
+  - Improved performance compared to 10 feature maps.
+  - Validation loss was stable, and the model exhibited better generalization.
+
+---
+
+#### Feature Maps: 25
+- **Accuracy**: 93.14%
+- **Macro Precision/Recall/F1-Score**: 93.06%
+- **Observations**:
+  - Accuracy and precision dropped, indicating overfitting despite the increased feature maps.
+  - Some classes (e.g., `8` and `9`) performed significantly worse.
+
+---
+
+#### Feature Maps: 50
+- **Accuracy**: 93.62%
+- **Macro Precision/Recall/F1-Score**: 93.57%
+- **Observations**:
+  - Model struggled with overfitting despite a larger capacity.
+  - Loss curves exhibited higher fluctuations, impacting generalization on the test set.
+
+---
+
+### General Observations
+- **Optimal Feature Maps**: 16 feature maps struck a good balance between model capacity and generalization.
+- **Impact of Increased Feature Maps**: Beyond 16, adding more feature maps led to diminishing returns and overfitting.
+- **Topology Efficiency**: The additional convolution and pooling layer improved feature extraction but required careful tuning of feature maps to prevent overfitting.
+
 
 ## Task 2: Learning Rate
 
@@ -57,9 +111,6 @@ The learning rate is a crucial hyperparameter in optimization algorithms that co
 - **Optimal Learning Rate**: 0.003 provided the best accuracy with relatively stable convergence.
 - **Impact of Larger Learning Rates**: Higher rates led to slight overfitting and instability in validation loss.
 - **Convergence Behavior**: Smaller learning rates (0.001–0.003) offered smoother convergence and better overall performance.
-
-### Figures of Loss Functions
-Loss function graphs for each learning rate highlight the convergence behavior. Lower learning rates demonstrated smooth and consistent trends, while higher rates introduced fluctuations.
 
 
 ## Task 3: Learning Rate Schedules
