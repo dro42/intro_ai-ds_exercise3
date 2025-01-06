@@ -201,9 +201,9 @@ dropout = 0.5 # 0.2 - 0.5
 momentum = 0.9 # task 4 - optimizers
 n_epochs = 100
 # selected 0.001, 0.003, 0.005, 0.01
-initial_learning_rate = 0.001 # 0.01 - 0.0001
-task = 'task_3'
-task_name = 'learning_rate_scheduler'
+initial_learning_rate = 0.01 # 0.01 - 0.0001
+task = 'task_2'
+task_name = 'learning_rate'
 rate = initial_learning_rate
 
 model_name = 'CNN_Handwritten_OCR_CNN' + str(n_cnn1planes) + '_KERNEL' + str(n_cnn1kernel) + '_Epochs' + str(n_epochs) + f'{task_name}' + f'rate{rate}'
@@ -268,12 +268,14 @@ model.add(Dense(n_classes, activation='softmax'))
 task 2 - learning rate
 learning_rate = [0.01, 0.005, 0.003, 0.001]:
 task 3 - learning rate scheduler
-'''
+
 learning_rate = ExponentialDecay(
     initial_learning_rate=initial_learning_rate,  # Smaller initial value
     decay_steps=1000,
     decay_rate=0.9
 )
+'''
+learning_rate = initial_learning_rate
 
 # Task 4 - Optimizer
 
