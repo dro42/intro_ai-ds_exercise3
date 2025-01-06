@@ -257,3 +257,8 @@ Four dropout values were evaluated: **0.2**, **0.3**, **0.4**, and **0.5**.
 - A **dropout rate of 0.2** provides the best balance between generalization and accuracy.
 - As the dropout rate increases, the model transitions from minimal overfitting to underfitting, reducing its ability to generalize effectively.
 - **Recommendation**: Use a dropout rate between **0.2 and 0.3** for optimal performance with this architecture and dataset.
+
+## Best model configuration
+- Feature Maps: 16
+- Learning Rate: 0.003
+- Learning Rate Sch
