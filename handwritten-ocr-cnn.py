@@ -1,10 +1,10 @@
 # keras imports for the dataset and building our neural network
-from tensorflow.keras.datasets import mnist
+from keras.datasets import mnist
 from keras.models import Model, Sequential
 from keras.layers import Dense, Dropout, Conv2D, MaxPool2D, Flatten, BatchNormalization
 from keras.optimizers.schedules import ExponentialDecay
 from keras import callbacks
-from tensorflow.keras.callbacks import TensorBoard
+from keras.callbacks import TensorBoard
 from tensorflow.keras.optimizers.legacy import SGD, Adam
 # from keras.utils import np_utils
 from keras.utils import to_categorical
@@ -15,7 +15,11 @@ from matplotlib.gridspec import GridSpec
 from datetime import datetime
 import numpy as np
 import os
-
+import tensorflow as tf
+from tensorflow.keras.optimizers.schedules import ExponentialDecay
+from tensorflow.keras.initializers import HeNormal
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.regularizers import l2
 
 def display_classification_report(classification_report, figure_path, figure_name, onscreen=True):
     f = open(os.path.join(figure_path, figure_name + '.txt'), 'w')
@@ -30,7 +34,7 @@ def display_confusion_matrix(confusion_matrix, labels, figure_path, figure_name,
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
 
     disp.plot(cmap=plt.cm.gray)
-    fig=disp.figure_
+    fig = disp.figure_
 
     plt.savefig(os.path.join(figure_path, figure_name + '.' + figure_format), format=figure_format)
 
@@ -174,6 +178,7 @@ print("y_test shape", y_test.shape)
 # normalizing the data
 X_train /= 255
 X_test /= 255
+print(f"Training data min: {X_train.min()}, max: {X_train.max()}")
 
 # one-hot encoding using keras' numpy-related utilities
 n_classes = 10
@@ -191,7 +196,7 @@ n_poolsize = 1
 # Stride is a critical parameter for controlling the spatial resolution of the feature maps and influencing the receptive field of the network.
 n_strides = 1
 n_dense = 100
-dropout = 0.3
+dropout = 0.5
 
 n_epochs = 100
 
@@ -207,22 +212,27 @@ log_path = './log'
 # building a linear stack of layers with the sequential model
 model = Sequential()
 # convolutional layer
-cnn1 = Conv2D(n_cnn1planes, kernel_size=(n_cnn1kernel, n_cnn1kernel), strides=(n_strides, n_strides), padding='valid',
-              activation='relu', input_shape=(28, 28, 1))
+cnn1 = Conv2D(n_cnn1planes,
+              kernel_size=(n_cnn1kernel, n_cnn1kernel),
+              activation='relu',
+              kernel_initializer='he_normal',
+              kernel_regularizer=l2(0.001),  # Add L2 regularization
+              input_shape=(28, 28, 1))
+
 model.add(cnn1)
 model.add(MaxPool2D(pool_size=(n_poolsize, n_poolsize)))
 
-# model.add(Dropout(dropout))
+model.add(Dropout(dropout))
 
 cnn2 = Conv2D(n_cnn1planes * 2, kernel_size=(n_cnn1kernel, n_cnn1kernel), strides=(n_strides, n_strides),
-              padding='valid', activation='relu')
+              padding='valid', activation='relu', kernel_regularizer=l2(0.001))  # Add L2 regularization
 model.add(cnn2)
 model.add(MaxPool2D(pool_size=(n_poolsize, n_poolsize)))
 
-# model.add(Dropout(dropout))
+model.add(Dropout(dropout))
 
 cnn3 = Conv2D(n_cnn1planes * 4, kernel_size=(n_cnn1kernel, n_cnn1kernel), strides=(n_strides, n_strides),
-              padding='valid', activation='relu')
+              padding='valid', activation='relu', kernel_regularizer=l2(0.001))  # Add L2 regularization
 model.add(cnn3)
 model.add(MaxPool2D(pool_size=(n_poolsize, n_poolsize)))
 
@@ -234,9 +244,14 @@ model.add(Flatten())
 model.add(Dropout(dropout))
 
 # hidden layer
-model.add(Dense(n_dense, activation='relu'))
+model.add(Dense(n_dense, activation='relu', kernel_regularizer=l2(0.001)))  # Add L2 regularization
 # output layer
 model.add(Dense(n_classes, activation='softmax'))
+
+# Reduce the learning rate
+optimizer = SGD(learning_rate=0.001, momentum=0.9, clipnorm=1.0)
+
+model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer=optimizer)
 
 # compiling the sequential model
 
@@ -244,8 +259,11 @@ model_name += '_Optimzer_' + 'SGD'
 
 # vary the constant learning rate
 model_name += '_LearningRate_' + 'Constant'
-learning_rate = 0.001
-
+learning_rate = ExponentialDecay(
+    initial_learning_rate=0.001,  # Smaller initial value
+    decay_steps=1000,
+    decay_rate=0.9
+)
 # OR use a learning rate scheduler that adapts the learning rate over the epochs of the training process
 # https://keras.io/2.15/api/optimizers/learning_rate_schedules/
 
@@ -254,9 +272,9 @@ learning_rate = 0.001
 
 # learning_rate=0.01
 momentum = 0.9
-optimizer = SGD(learning_rate=learning_rate, momentum=momentum)
-
-# optimizer=Adam(learning_rate = learning_rate)
+optimizer = SGD(learning_rate=0.001,
+                momentum=0.9,
+                clipnorm=1.0)# optimizer=Adam(learning_rate = learning_rate)
 
 
 # vary the constant learning rate
@@ -275,9 +293,17 @@ log_dir = os.path.join(log_path, datetime.now().strftime("%Y%m%d-%H%M%S"))
 
 tensorboard_callback = TensorBoard(log_dir=log_dir, histogram_freq=1)
 
+# Define the EarlyStopping callback
+early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+
 # training the model for n_epochs, use 10% of the training data as validation data
-history = model.fit(X_train, Y_train, validation_split=0.1, batch_size=128, epochs=n_epochs,
-                    callbacks=[tensorboard_callback])
+history = model.fit(
+    X_train, Y_train,
+    validation_split=0.1,
+    batch_size=32,  # Reduce batch size
+    epochs=n_epochs,
+    callbacks=[tensorboard_callback, early_stopping]
+)
 
 figure_name = model_name + '_loss'
 display_loss_function(history, './results', figure_name, figure_format)
