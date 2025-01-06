@@ -261,4 +261,6 @@ Four dropout values were evaluated: **0.2**, **0.3**, **0.4**, and **0.5**.
 ## Best model configuration
 - Feature Maps: 16
 - Learning Rate: 0.003
-- Learning Rate Sch
+- Learning Rate Schedule: Exponential Decay
+- Optimizer: SGD with Momentum 0.9
+- Dropout Rate: 0.2
