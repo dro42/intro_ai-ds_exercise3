@@ -37,3 +37,8 @@
     ```bash
     pip install -r "requirements_[windows|macos].txt"
     ```
+
+## Contributors 
+
+- Andreas Drozd 
+- Sergiu Iordanescu

@@ -1,3 +1,4 @@
+# @Author:  Sergiu Iordanescu, Andreas Drozd
 # keras imports for the dataset and building our neural network
 import os
 from datetime import datetime
@@ -184,7 +185,7 @@ print("Shape before one-hot encoding: ", y_train.shape)
 Y_train = to_categorical(y_train, n_classes)
 Y_test = to_categorical(y_test, n_classes)
 print("Shape after one-hot encoding: ", Y_train.shape)
-n_cnn1planes = 32  # task 1 - number of the feature maps for the first convolutional layer
+n_cnn1planes = 50  # task 1 - number of the feature maps for the first convolutional layer
 
 n_cnn1kernel = 3
 n_poolsize = 2
