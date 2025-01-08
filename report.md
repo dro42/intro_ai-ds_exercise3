@@ -259,8 +259,8 @@ Four dropout values were evaluated: **0.2**, **0.3**, **0.4**, and **0.5**.
 - **Recommendation**: Use a dropout rate between **0.2 and 0.3** for optimal performance with this architecture and dataset.
 
 ## Best model configuration
-- Feature Maps: 16
-- Learning Rate: 0.003
+- Feature Maps: 50
+- Learning Rate: 0.001
 - Learning Rate Schedule: Exponential Decay
 - Optimizer: SGD with Momentum 0.9
-- Dropout Rate: 0.2
+- Dropout Rate: 0.5
