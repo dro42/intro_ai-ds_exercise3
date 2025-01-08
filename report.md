@@ -2,14 +2,14 @@
 
 ## Overview - Big Picture
 
-| **Question**                           | **Answer**                          |
-|---------------------------------------|-------------------------------------|
-| **Type of Learning**                   | Supervised Learning                 |
-| **Task Type**                          | Classification                      |
-| **Algorithm**                          | Convolutional Neural Network (CNN)  |
-| **Performance Measure**                | Accuracy, Loss (Cross-Entropy)      |
-| **Learning Type**                      | Offline                             |
-| **Batch or Incremental**               | Batch Learning                      |
+| **Question**             | **Answer**                         |
+|--------------------------|------------------------------------|
+| **Type of Learning**     | Supervised Learning                |
+| **Task Type**            | Classification                     |
+| **Algorithm**            | Convolutional Neural Network (CNN) |
+| **Performance Measure**  | Accuracy, Loss (Cross-Entropy)     |
+| **Learning Type**        | Offline                            |
+| **Batch or Incremental** | Batch Learning                     |
 
 ## Task 1
 
