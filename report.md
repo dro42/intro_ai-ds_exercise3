@@ -1,5 +1,16 @@
 # Report
 
+## Overview - Big Picture
+
+| **Question**                           | **Answer**                          |
+|---------------------------------------|-------------------------------------|
+| **Type of Learning**                   | Supervised Learning                 |
+| **Task Type**                          | Classification                      |
+| **Algorithm**                          | Convolutional Neural Network (CNN)  |
+| **Performance Measure**                | Accuracy, Loss (Cross-Entropy)      |
+| **Learning Type**                      | Offline                             |
+| **Batch or Incremental**               | Batch Learning                      |
+
 ## Task 1
 
 ### Role of Convolution and Pooling Layers
@@ -263,4 +274,4 @@ Four dropout values were evaluated: **0.2**, **0.3**, **0.4**, and **0.5**.
 - Learning Rate: 0.001
 - Learning Rate Schedule: Exponential Decay
 - Optimizer: SGD with Momentum 0.9
-- Dropout Rate: 0.5
+- Dropout Rate: 0.2
