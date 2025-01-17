@@ -202,7 +202,7 @@ n_epochs = 100
 # selected 0.001, 0.003, 0.005, 0.01
 initial_learning_rate = 0.001  # 0.01 - 0.0001
 task = 'task_6'
-task_name = 'final_accuracy_evaluation'
+task_name = '_final_accuracy_evaluation_'
 rate = n_cnn1planes
 
 model_name = 'CNN_Handwritten_OCR_CNN' + str(n_cnn1planes) + '_KERNEL' + str(n_cnn1kernel) + '_Epochs' + str(

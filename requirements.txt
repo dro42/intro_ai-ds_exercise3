@@ -8,3 +8,4 @@ scikit-learn
 visualkeras
 tensorboard
 keras-visualizer
+pandas
