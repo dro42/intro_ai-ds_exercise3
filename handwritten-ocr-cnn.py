@@ -1,4 +1,4 @@
-# @Author:  Sergiu Iordanescu, Andreas Drozd
+# @Author:  Sergiu-Claudiu Iordanescu, Andreas Drozd
 # keras imports for the dataset and building our neural network
 import os
 from datetime import datetime

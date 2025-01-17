@@ -1,5 +1,10 @@
 # Report
 
+## Contributors
+
+- Sergiu-Claudiu Iordanescu
+- Andreas Drozd
+
 ## Overview - Big Picture
 
 | **Question**             | **Answer**                         |
@@ -403,6 +408,12 @@ Four dropout values were evaluated: **0.2**, **0.3**, **0.4**, and **0.5**.
 ---
 
 ## Task 6: Best Model Configuration
+
+The selected configuration balances overfitting and underfitting by combining:
+
+A small learning rate with exponential decay for gradual convergence.
+Moderate dropout and feature maps to balance capacity and regularization.
+Batch normalization and momentum-based SGD for stability and improved training dynamics.
 
 ## configuration
 
